@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { forkJoin } from "rxjs";
 import { ProductService } from "src/codeokk/shared/service/product.service";
@@ -11,11 +11,12 @@ import { map } from "rxjs/operators";
   styleUrls: ["./filters.component.css"],
 })
 export class FiltersComponent {
-  products: any[] = [];
+  @Input() products: any;
   colors: any[] = [];
   discounts: any[] = [];
   sizes: any[] = [];
   brands: any[] = [];
+  materials: any[] = [];
 
   parentId: Number = 0;
   subCategoryId: Number = 0;
@@ -32,16 +33,20 @@ export class FiltersComponent {
   selectedColors: number[] = [];
   selectedBrands: number[] = [];
   selectedDiscount: number[] = [];
+  selectedMaterials: number[] = [];
 
   brandsExpanded: boolean = false;
   colorsExpanded: boolean = false;
+  materialsExpanded: boolean = false;
 
   brandSearchText: string = "";
   colorSearchText: string = "";
+  materialSearchText: string = "";
 
   showAllBrands: boolean = false;
   showAllColors: boolean = false;
   showAllDiscounts: boolean = false;
+  showAllMaterials: boolean = false;
 
   allParentCategories: any[] = [];
   allCategories: any[] = [];
@@ -77,7 +82,7 @@ export class FiltersComponent {
         this.subCategoryId = Number(params["subCategory"]);
       else this.subCategoryId = 0;
       this.getBrand(this.subCategoryId);
-
+      this.getAllMaterials();
       // this.getBrands();
       if (params["category"] != undefined)
         this.menuId = Number(params["category"]);
@@ -92,6 +97,24 @@ export class FiltersComponent {
         this.getColorBySubCategoryId(this.subCategoryId);
         this.getDiscountBySubCategoryId(this.subCategoryId);
       }
+    });
+  }
+
+  getAllMaterials() {
+    this.masterService.getAllMaterials().subscribe((res: any) => {
+      const allMaterials = res;
+
+      // Create a set of material IDs present in products
+      const productMaterialIds = new Set(
+        this.products
+          .flatMap((product: any) => product.material || [])
+          .map((material: any) => material.id)
+      );
+
+      // Filter the materials to keep only those present in products
+      this.materials = allMaterials.filter((material: any) =>
+        productMaterialIds.has(material.id)
+      );
     });
   }
 
@@ -122,6 +145,14 @@ export class FiltersComponent {
   get filteredColors() {
     return this.colors.filter((color) =>
       color.name.toLowerCase().includes(this.colorSearchText.toLowerCase())
+    );
+  }
+
+  get filteredMaterials() {
+    return this.materials.filter((material) =>
+      material.name
+        .toLowerCase()
+        .includes(this.materialSearchText.toLowerCase())
     );
   }
 
@@ -217,12 +248,26 @@ export class FiltersComponent {
     this.colorsExpanded = !this.colorsExpanded;
   }
 
+  toggleMaterialsSearch() {
+    this.materialsExpanded = !this.materialsExpanded;
+  }
+
   toggleColor(colorId: number) {
     const index = this.selectedColors.indexOf(colorId);
     if (index === -1) {
       this.selectedColors.push(colorId);
     } else {
       this.selectedColors.splice(index, 1);
+    }
+    this.applyFilters();
+  }
+
+  toggleMaterial(materialId: number) {
+    const index = this.selectedMaterials.indexOf(materialId);
+    if (index === -1) {
+      this.selectedMaterials.push(materialId);
+    } else {
+      this.selectedMaterials.splice(index, 1);
     }
     this.applyFilters();
   }
@@ -260,6 +305,7 @@ export class FiltersComponent {
       minPrice: this.minValue,
       maxPrice: this.maxValue,
       discount: this.selectedDiscount,
+      material: this.selectedMaterials,
     });
   }
 
@@ -273,6 +319,10 @@ export class FiltersComponent {
 
   toggleShowAllDiscounts() {
     this.showAllDiscounts = !this.showAllDiscounts;
+  }
+
+  toggleShowAllMaterials() {
+    this.showAllMaterials = !this.showAllMaterials;
   }
 
   // getBrands() {

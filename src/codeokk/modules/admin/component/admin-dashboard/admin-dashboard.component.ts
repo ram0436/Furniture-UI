@@ -32,6 +32,7 @@ export class AdminDashboardComponent {
   showColors = false;
   showProduct = false;
   showOrders: boolean = false;
+  showMaterials: boolean = false;
   showDeleteCategories: boolean = false;
 
   parentCategories: any[] = [];
@@ -41,6 +42,7 @@ export class AdminDashboardComponent {
   products: any[] = [];
   colors: any[] = [];
   discounts: any[] = [];
+  materials: any[] = [];
   sizes: any[] = [];
   brands: any[] = [];
   selectedDiscountId: number | null = null;
@@ -55,6 +57,7 @@ export class AdminDashboardComponent {
   brandSubCategories: any[] = [];
 
   brandName: string = "";
+  materialName: string = "";
   brandCategoryId: number = 0;
   colorName: string = "";
   colorCode: string = "";
@@ -123,6 +126,7 @@ export class AdminDashboardComponent {
     this.getAllBrands();
     this.getAllColors();
     this.getAllDicounts();
+    this.getAllMaterials();
     this.getAllProductSizes();
     for (var i = 0; i < this.cardsCount.length; i++) {
       this.cardsCount[i] = "";
@@ -178,6 +182,7 @@ export class AdminDashboardComponent {
         this.productPayload.productSubCategoryId = data.subCategory[0]?.id || 0;
         this.productPayload.productBrandId = data.brand[0]?.id || 0;
         this.productPayload.productColorId = data.color[0]?.id || 0;
+        this.productPayload.materialId = data.material[0]?.id || 0;
         // this.productPayload.productSizeId = data.productSize[0]?.id || 0;
         this.productPayload.productCode = data.productCode;
         this.productPayload.productPrice = data.price;
@@ -194,7 +199,6 @@ export class AdminDashboardComponent {
           data.productSizeMappingList.map(
             (mapping: any) => mapping.productSizeId
           );
-        console.log(this.productPayload.productSizeMappingsList);
       });
   }
 
@@ -217,6 +221,12 @@ export class AdminDashboardComponent {
   getAllDicounts() {
     this.masterService.getAllDiscount().subscribe((res: any) => {
       this.discounts = res;
+    });
+  }
+
+  getAllMaterials() {
+    this.masterService.getAllMaterials().subscribe((res: any) => {
+      this.materials = res;
     });
   }
 
@@ -262,6 +272,7 @@ export class AdminDashboardComponent {
       colorId: this.productPayload.productColorId,
       productSizeMappingsList: productSizeMappingsList,
       discountId: discountId,
+      materialId: this.productPayload.materialId,
       tagList: this.productPayload.tags,
       id: this.product.id || 0,
       inStock: this.productPayload.inStock,
@@ -298,17 +309,19 @@ export class AdminDashboardComponent {
     } else if (!payload.productCode) {
       this.showNotification("Product code is required");
     } else if (!payload.parentCategoryId) {
-      this.showNotification("Parent category ID is required");
+      this.showNotification("Parent category is required");
     } else if (!payload.categoryId) {
-      this.showNotification("Category ID is required");
+      this.showNotification("Category is required");
     } else if (!payload.subCategoryId) {
-      this.showNotification("Subcategory ID is required");
+      this.showNotification("Subcategory is required");
     } else if (!payload.price) {
       this.showNotification("Price is required");
     } else if (!payload.colorId) {
-      this.showNotification("Color ID is required");
+      this.showNotification("Color is required");
+    } else if (!payload.materialId) {
+      this.showNotification("Material is required");
     } else if (payload.productSizeMappingsList <= 0) {
-      this.showNotification("Product size ID is required");
+      this.showNotification("Product size is required");
     } else if (payload.tagList.length <= 0) {
       this.showNotification("At least 1 tag is required");
     } else if (payload.productImageList.length < 2) {
@@ -703,9 +716,13 @@ export class AdminDashboardComponent {
       name: this.parentCategory,
     };
 
-    this.masterService.addParentCategory(payload).subscribe((response) => {
-      this.showNotification("Added Parent Category Successfully");
-    });
+    if (payload.name) {
+      this.masterService.addParentCategory(payload).subscribe((response) => {
+        this.showNotification("Added Parent Category Successfully");
+      });
+    } else {
+      this.showNotification("Parent category name is required");
+    }
   }
 
   addCategory() {
@@ -718,9 +735,13 @@ export class AdminDashboardComponent {
       parentCategoryId: this.parentCategoryId,
     };
 
-    this.masterService.addCategory(payload).subscribe((response) => {
-      this.showNotification("Added Category Successfully");
-    });
+    if (payload.name) {
+      this.masterService.addCategory(payload).subscribe((response) => {
+        this.showNotification("Added Category Successfully");
+      });
+    } else {
+      this.showNotification("Category name is required");
+    }
   }
 
   addSubCategory() {
@@ -730,9 +751,13 @@ export class AdminDashboardComponent {
       categoryId: this.categoryId,
     };
 
-    this.masterService.addSubCategory(payload).subscribe((response) => {
-      this.showNotification("Added Sub Category Successfully");
-    });
+    if (payload.name) {
+      this.masterService.addSubCategory(payload).subscribe((response) => {
+        this.showNotification("Added Sub Category Successfully");
+      });
+    } else {
+      this.showNotification("Sub category name is required");
+    }
   }
 
   addBrand() {
@@ -742,9 +767,28 @@ export class AdminDashboardComponent {
       subCategoryId: 0,
     };
 
-    this.masterService.addBrand(payload).subscribe((response) => {
-      this.showNotification("Added Brand Successfully");
-    });
+    if (payload.name) {
+      this.masterService.addBrand(payload).subscribe((response) => {
+        this.showNotification("Added Brand Successfully");
+      });
+    } else {
+      this.showNotification("Brand name is required");
+    }
+  }
+
+  addMaterial() {
+    const payload = {
+      id: 0,
+      name: this.materialName,
+    };
+
+    if (payload.name) {
+      this.masterService.addMaterial(payload).subscribe((response) => {
+        this.showNotification("Added Material Successfully");
+      });
+    } else {
+      this.showNotification("Material name is required");
+    }
   }
 
   addColor() {
@@ -753,9 +797,14 @@ export class AdminDashboardComponent {
       name: this.colorName,
       code: this.colorCode,
     };
-    this.masterService.addColor(payload).subscribe((response) => {
-      this.showNotification("Added Color Successfully");
-    });
+
+    if (payload.name) {
+      this.masterService.addColor(payload).subscribe((response) => {
+        this.showNotification("Added Color Successfully");
+      });
+    } else {
+      this.showNotification("Color name is required");
+    }
   }
 
   showNotification(message: string): void {
@@ -789,6 +838,7 @@ export class AdminDashboardComponent {
     this.showColors = false;
     this.showProduct = false;
     this.showOrders = false;
+    this.showMaterials = false;
     this.showDeleteCategories = false;
   }
 
@@ -807,6 +857,9 @@ export class AdminDashboardComponent {
         break;
       case "product":
         this.showProduct = true;
+        break;
+      case "materials":
+        this.showMaterials = true;
         break;
       case "delete-categories":
         this.showDeleteCategories = true;

@@ -90,7 +90,7 @@
     [ngClass]="{ 'border-btm': filtersToggled }"
     *ngIf="!isScreenSmall || filtersToggled"
   >
-    <app-filters></app-filters>
+    <app-filters [products]="products"></app-filters>
   </div>
   <div class="posts-component" [ngClass]="{ 'pd-top': showSizeFilters }">
     <div class="spinner__loading" *ngIf="isLoading">

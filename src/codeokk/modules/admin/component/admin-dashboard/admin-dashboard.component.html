@@ -40,6 +40,13 @@
             </div>
             <div
               class="section"
+              [class.active]="selectedSection === 'materials'"
+              (click)="toggleSection('materials')"
+            >
+              Manage Materials
+            </div>
+            <div
+              class="section"
               [class.active]="selectedSection === 'product'"
               (click)="toggleSection('product')"
             >
@@ -274,6 +281,34 @@
           </form>
         </mat-card-content>
       </div>
+      <div class="manage-brands" *ngIf="showMaterials">
+        <div class="heading">
+          <h2>Manage Materials</h2>
+        </div>
+        <mat-card-content>
+          <form class="form">
+            <p>Material</p>
+            <mat-form-field>
+              <mat-label>Add Material</mat-label>
+              <input
+                matInput
+                placeholder="Add Material Name"
+                type="text"
+                name="material"
+                [(ngModel)]="materialName"
+              />
+            </mat-form-field>
+            <button
+              mat-raised-button
+              color="primary"
+              class="send-feedback"
+              (click)="addMaterial()"
+            >
+              Add Material
+            </button>
+          </form>
+        </mat-card-content>
+      </div>
       <div class="manage-colors" *ngIf="showColors">
         <div class="heading">
           <h2>Manage Colors</h2>
@@ -401,6 +436,22 @@
                   {{ brand.name }}
                 </mat-option>
               </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Select Material</mat-label>
+              <mat-select
+                [(ngModel)]="productPayload.materialId"
+                name="materialId"
+              >
+                <mat-option
+                  *ngFor="let material of materials"
+                  [value]="material.id"
+                >
+                  <span class="material-option">
+                    <span>{{ material.name }}</span>
+                  </span>
+                </mat-option>
+              </mat-select>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Select Color</mat-label>

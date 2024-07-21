@@ -36,6 +36,10 @@ export class MasterService {
     return this.http.get(`${this.baseUrl}/Master/GetAllProductSize`);
   }
 
+  getAllMaterials() {
+    return this.http.get(`${this.baseUrl}/Master/GetAllMaterial`);
+  }
+
   getBrandBySubCategoryId(subCategoryId: number) {
     return this.http.get(
       `${this.baseUrl}/Master/GetBrandBySubCategoryId?subCategoryId=${subCategoryId}`
@@ -104,6 +108,10 @@ export class MasterService {
 
   addBrand(payload: any) {
     return this.http.post(`${this.baseUrl}Master/AddBrand`, payload);
+  }
+
+  addMaterial(payload: any) {
+    return this.http.post(`${this.baseUrl}Master/AddMaterial`, payload);
   }
 
   addParentCategory(payload: any) {
