@@ -7,6 +7,7 @@ export class Common {
   productBrandId: number = 0;
   productColorId: number = 0;
   productSizeId: number = 0;
+  materialId: number = 0;
   productCode: string = "";
   productPrice: number = 0;
   tags: any[] = [];

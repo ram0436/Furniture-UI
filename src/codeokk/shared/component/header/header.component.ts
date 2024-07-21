@@ -70,9 +70,7 @@ export class HeaderComponent implements OnInit {
           (response: any) => {
             this.cartItemCount = response.length;
           },
-          (error: any) => {
-            // console.error("API Error:", error);
-          }
+          (error: any) => {}
         );
       if (localStorage.getItem("authToken") != null) this.isUserLogedIn = true;
     } else {

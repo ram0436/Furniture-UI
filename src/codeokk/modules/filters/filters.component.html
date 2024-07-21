@@ -1,3 +1,4 @@
+li
 <div class="filters">
   <!-- <div class="filter-head">
     <span class="head-title">FILTERS</span>
@@ -170,10 +171,62 @@
       </li>
     </ul>
     <ul *ngIf="colors.length === 0">
-      <li class="text-center">No Discounts Found</li>
+      <li class="text-center">No Colors Found</li>
     </ul>
     <ul *ngIf="filteredColors.length === 0 && colorSearchText.length > 0">
       <li>No colors found</li>
+    </ul>
+  </div>
+  <div class="filter-materials">
+    <span class="filter-title">Material</span>
+    <div
+      class="filter-searchbox"
+      [class.filter-search-expanded]="materialsExpanded"
+    >
+      <input
+        type="text"
+        class="search-inputBox search-hidden"
+        placeholder="Search for Materials"
+        [(ngModel)]="materialSearchText"
+        [class.search-hidden]="!materialsExpanded"
+        (input)="applyFilters()"
+      />
+      <span
+        class="material-icons-outlined search-icon"
+        (click)="toggleMaterialsSearch()"
+      >
+        {{ materialsExpanded ? "clear" : "search" }}
+      </span>
+    </div>
+    <ul class="materials-list" *ngIf="filteredMaterials.length !== 0">
+      <li
+        *ngFor="
+          let material of showAllMaterials
+            ? filteredMaterials
+            : filteredMaterials.slice(0, 10)
+        "
+      >
+        <label for="" class="custom-checkbox">
+          <input
+            type="checkbox"
+            [value]="material.id"
+            (change)="toggleMaterial(material.id)"
+          />
+          {{ material.name }}
+          <div class="checkbox-indicator"></div>
+        </label>
+      </li>
+      <li *ngIf="filteredMaterials.length > 10">
+        <button (click)="toggleShowAllMaterials()" class="show-all-btn">
+          {{ showAllMaterials ? "Show Less" : "Show More" }}
+        </button>
+      </li>
+    </ul>
+    <ul *ngIf="materials.length === 0">
+      <li class="text-center">No Materials Found</li>
+    </ul>
+    <ul *ngIf="filteredMaterials.length === 0 && materialSearchText.length > 0">
+      <li>No Materials found</li>
     </ul>
   </div>
   <div class="filter-discount">

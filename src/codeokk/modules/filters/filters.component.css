@@ -216,7 +216,8 @@ mat-slider {
 }
 
 .filter-colors,
-.filter-discount {
+.filter-discount,
+.filter-materials {
   padding-top: 20px;
   padding-bottom: 15px;
   padding-left: 25px;

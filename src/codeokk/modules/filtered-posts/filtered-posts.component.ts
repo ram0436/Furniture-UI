@@ -267,6 +267,7 @@ export class FilteredPostsComponent {
   }
 
   filterProducts(filters?: any) {
+    console.log(filters);
     let filteredProducts = [...this.originalProducts];
 
     filteredProducts = filteredProducts.filter((product) =>
@@ -294,6 +295,21 @@ export class FilteredPostsComponent {
       );
     }
 
+    // Filter by discount
+    if (filters.discount.length > 0) {
+      filteredProducts = filteredProducts.filter((product) =>
+        product.discount.some((d: any) => filters.discount.includes(d.id))
+      );
+    }
+
+    if (filters.material.length > 0) {
+      console.log(filteredProducts);
+      filteredProducts = filteredProducts.filter(
+        (product) =>
+          product.material &&
+          product.material.some((m: any) => filters.material.includes(m.id))
+      );
+    }
     // Filter by discount
     if (filters.discount.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
