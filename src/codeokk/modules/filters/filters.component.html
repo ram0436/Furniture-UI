@@ -198,7 +198,7 @@ li
         {{ materialsExpanded ? "clear" : "search" }}
       </span>
     </div>
-    <ul class="materials-list" *ngIf="filteredMaterials.length !== 0">
+    <ul class="materials-list" *ngIf="filteredColors.length !== 0">
       <li
         *ngFor="
           let material of showAllMaterials
@@ -222,6 +222,7 @@ li
         </button>
       </li>
     </ul>
+
     <ul *ngIf="materials.length === 0">
       <li class="text-center">No Materials Found</li>
     </ul>

@@ -42,6 +42,12 @@ export class ProductService {
     );
   }
 
+  getMaterialByProductId(productId: any) {
+    return this.http.get(
+      `${this.BaseURL}Product/GetMaterialByProductId?productId=${productId}`
+    );
+  }
+
   deleteProduct(id: any) {
     return this.http.delete(`${this.BaseURL}Product/${id}`);
   }
