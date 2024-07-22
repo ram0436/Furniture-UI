@@ -267,96 +267,70 @@ export class FilteredPostsComponent {
   }
 
   filterProducts(filters?: any) {
-    console.log(filters);
+    // Start with all products if no filters are applied
     let filteredProducts = [...this.originalProducts];
 
+    // Return initial products if no filters are provided
+    if (
+      !filters ||
+      !Object.keys(filters).some((key) => filters[key].length > 0)
+    ) {
+      this.products = filteredProducts;
+      this.isLoading = false;
+      return;
+    }
+
+    // Apply filters
     filteredProducts = filteredProducts.filter((product) =>
       this.matchProductIds(product)
     );
 
     // Filter by category
-    if (filters.categories.length > 0) {
+    if (filters.categories && filters.categories.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         filters.categories.includes(product.subCategory[0].id)
       );
     }
 
     // Filter by brand
-    if (filters.brands.length > 0) {
+    if (filters.brands && filters.brands.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         product.brand.some((b: any) => filters.brands.includes(b.id))
       );
     }
 
     // Filter by color
-    if (filters.colors.length > 0) {
+    if (filters.colors && filters.colors.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         product.color.some((c: any) => filters.colors.includes(c.id))
       );
     }
 
     // Filter by discount
-    if (filters.discount.length > 0) {
+    if (filters.discount && filters.discount.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         product.discount.some((d: any) => filters.discount.includes(d.id))
       );
     }
 
-    if (filters.material.length > 0) {
-      console.log(filteredProducts);
+    // Filter by material
+    if (filters.material && filters.material.length > 0) {
       filteredProducts = filteredProducts.filter(
         (product) =>
           product.material &&
           product.material.some((m: any) => filters.material.includes(m.id))
       );
     }
-    // Filter by discount
-    if (filters.discount.length > 0) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.discount.some((d: any) => filters.discount.includes(d.id))
-      );
-    }
 
+    // Filter by price range
     filteredProducts = filteredProducts.filter(
       (product) =>
         product.price >= filters.minPrice && product.price <= filters.maxPrice
     );
 
+    // Update products and loading status
     this.products = filteredProducts;
-
     this.isLoading = false;
-
-    // this.productService.getAllProducts().subscribe((res) => {
-    //   this.products = res.filter((product) => {
-    //     const categoryId = Number(this.categoryId);
-    //     const subCategoryId = Number(this.subCategoryId);
-    //     const parentId = Number(this.parentId);
-    //     const brandIds = filters.brands;
-
-    //     if (
-    //       (filters.categories.length === 0 ||
-    //         filters.categories.includes(product.subCategory[0].id)) &&
-    //       (filters.colors.length === 0 ||
-    //         product.color.some((color: any) =>
-    //           filters.colors.includes(color.id)
-    //         )) &&
-    //       (filters.brands.length === 0 ||
-    //         product.brand.some((brand: any) => brandIds.includes(brand.id))) &&
-    //       (filters.discount === 0 ||
-    //         product.discount.some(
-    //           (discount: any) => discount.percent >= filters.discount
-    //         )) &&
-    //       (categoryId === 0 || product.category[0].id === categoryId) &&
-    //       (subCategoryId === 0 ||
-    //         product.subCategory[0].id === subCategoryId) &&
-    //       (parentId === 0 || product.parentCategory[0].id === parentId)
-    //     ) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   });
-    // });
   }
 
   getProducts() {

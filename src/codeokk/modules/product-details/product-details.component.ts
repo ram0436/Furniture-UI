@@ -29,7 +29,7 @@ export class ProductDetailsComponent {
   showModal: boolean = false;
   productDetails: any;
   favoriteStatus: { [key: string]: boolean } = {};
-  selectedSize: number | null = null;
+  selectedSize: number = 0;
   dialogRef: MatDialogRef<any> | null = null;
   isUserLogedIn: boolean = false;
 
@@ -209,7 +209,7 @@ export class ProductDetailsComponent {
 
   addToBag(productId: string) {
     if (localStorage.getItem("id") != null) {
-      if (this.selectedSize !== null) {
+      if (this.selectedSize !== 0) {
         const cartItem = {
           id: 0,
           productCode: productId,
@@ -224,10 +224,6 @@ export class ProductDetailsComponent {
         this.userService.addToCart(cartItem).subscribe(
           (response: any) => {
             this.showNotification("Successfully Added to Cart");
-            // this.productService.bagCount.subscribe((count) => {
-            //   this.productService.updateBagCount(count + 1);
-            // });
-            // this.productService.bagCount += 1;
           },
           (error: any) => {}
         );

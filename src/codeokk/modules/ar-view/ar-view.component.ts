@@ -56,7 +56,6 @@ export class ArViewComponent implements OnInit {
     // Load FBX model
     const loader = new FBXLoader();
     loader.load("assets/Doormat.fbx", (fbx) => {
-      console.log(fbx);
       this.carpet = fbx;
       this.carpet.position.set(0, 0, 0.01); // Set initial position
       this.scene.add(this.carpet);
@@ -66,7 +65,6 @@ export class ArViewComponent implements OnInit {
       // this.carpet.rotation.y = Math.PI / 2;
     });
 
-    console.log(this.carpet);
 
     this.camera = new THREE.PerspectiveCamera(
       75,
