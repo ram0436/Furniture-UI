@@ -82,6 +82,12 @@ export class MasterService {
     );
   }
 
+  getAllMaterialBySubCategoryId(subCategoryId: number) {
+    return this.http.get(
+      `${this.baseUrl}/Master/GetMaterialBySubCategoryId?subCategoryId=${subCategoryId}`
+    );
+  }
+
   getAllColorByCategoryId(categoryId: number) {
     return this.http.get(
       `${this.baseUrl}/Master/GetAllColorByCategoryId?categoryId=${categoryId}`
@@ -91,6 +97,12 @@ export class MasterService {
   getAllDiscountByCategoryId(categoryId: number) {
     return this.http.get(
       `${this.baseUrl}/Master/GetAllDiscountByCategoryId?categoryId=${categoryId}`
+    );
+  }
+
+  getAllMaterialByCategoryId(categoryId: number) {
+    return this.http.get(
+      `${this.baseUrl}/Master/GetMaterialByCategoryId?categoryId=${categoryId}`
     );
   }
 

@@ -8,7 +8,7 @@ import { MasterService } from "../service/master.service";
   templateUrl: "./filters.component.html",
   styleUrls: ["./filters.component.css"],
 })
-export class FiltersComponent implements OnChanges {
+export class FiltersComponent {
   @Input() products: any;
   colors: any[] = [];
   discounts: any[] = [];
@@ -87,41 +87,42 @@ export class FiltersComponent implements OnChanges {
         this.getBrandByCategoryId(this.categoryId);
         this.getColorByCategoryId(this.categoryId);
         this.getDiscountByCategoryId(this.categoryId);
+        this.getMaterialByCategoryId(this.categoryId);
       } else if (this.subCategoryId !== 0) {
         this.getBrand(this.subCategoryId);
         this.getColorBySubCategoryId(this.subCategoryId);
         this.getDiscountBySubCategoryId(this.subCategoryId);
+        this.getMaterialBySubCategoryId(this.subCategoryId);
       }
     });
-    this.getMaterialsForAllProducts();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes["products"] && this.products && this.products.length > 0) {
-      this.getMaterialsForAllProducts();
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (changes["products"] && this.products && this.products.length > 0) {
+  //     this.getMaterialsForAllProducts();
+  //   }
+  // }
 
-  getMaterialsForAllProducts() {
-    this.materials = []; // Reset materials array
-    if (this.products && this.products.length > 0) {
-      this.products.forEach((product: any) => {
-        this.getMaterialByProductId(product.id);
-      });
-    }
-  }
+  // getMaterialsForAllProducts() {
+  //   this.materials = []; // Reset materials array
+  //   if (this.products && this.products.length > 0) {
+  //     this.products.forEach((product: any) => {
+  //       this.getMaterialByProductId(product.id);
+  //     });
+  //   }
+  // }
 
-  getMaterialByProductId(productId: number) {
-    this.productService
-      .getMaterialByProductId(productId)
-      .subscribe((res: any) => {
-        if (Array.isArray(res)) {
-          this.materials.push(...res);
-        } else {
-          this.materials.push(res);
-        }
-      });
-  }
+  // getMaterialByProductId(productId: number) {
+  //   this.productService
+  //     .getMaterialByProductId(productId)
+  //     .subscribe((res: any) => {
+  //       if (Array.isArray(res)) {
+  //         this.materials.push(...res);
+  //       } else {
+  //         this.materials.push(res);
+  //       }
+  //     });
+  // }
 
   updateSlider() {
     if (this.minValue < this.sliderMin) this.minValue = this.sliderMin;
@@ -196,6 +197,14 @@ export class FiltersComponent implements OnChanges {
       });
   }
 
+  getMaterialByCategoryId(categoryId: any) {
+    this.masterService
+      .getAllMaterialByCategoryId(categoryId)
+      .subscribe((data: any) => {
+        this.materials = data;
+      });
+  }
+
   getColorByCategoryId(categoryId: any) {
     this.masterService
       .getAllColorByCategoryId(categoryId)
@@ -209,6 +218,14 @@ export class FiltersComponent implements OnChanges {
       .getAllDiscountBySubCategoryId(categoryId)
       .subscribe((data: any) => {
         this.discounts = data;
+      });
+  }
+
+  getMaterialBySubCategoryId(categoryId: any) {
+    this.masterService
+      .getAllMaterialBySubCategoryId(categoryId)
+      .subscribe((data: any) => {
+        this.materials = data;
       });
   }
 
